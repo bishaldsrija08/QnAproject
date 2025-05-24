@@ -1,25 +1,40 @@
 const express = require("express")
+const { Users } = require("./model/index.js")
 const app = express()
 require("./model/index.js")
 require("./config/dbConfig.js")
 
+//formbata ako data buj vaneko
+app.use(express.urlencoded({ extended: true })) // adi frontend pani backend batai render vako xa vane yo use garne
+app.use(express.json()) // client server ma yo use garne
+
 //Set view engine 
 app.set('view engine', 'ejs')
 
-app.get("/", (req, res)=>{
-res.render('home') //second argument in object
+app.post("/register", async (req, res) => {
+    console.log(req.body)
+    const { userName, userPassword, userEmail } = req.body
+    await Users.create({
+        userName,
+        userEmail,
+        userPassword
+    })
+    res.json({
+        message: "Registered Successfully"
+    })
 })
 
-app.get("/register", (req,res)=>{
-    res.render("auth/register.ejs")
-})
-
-app.get("/login", (req,res)=>{
+app.get("/login", (req, res) => {
     res.render("auth/login")
+})
+
+app.get("/register", (req, res) => {
+    res.render("auth/register")
 })
 
 app.use(express.static('public/css/'))
 
-app.listen(3000, ()=>{
+
+app.listen(3000, () => {
     console.log("Project has started at port 3000")
 })

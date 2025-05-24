@@ -1,5 +1,7 @@
 const dbConfig = require("../config/dbConfig");
 const { Sequelize, DataTypes } = require("sequelize");
+const blogModel = require("./blogModel");
+const userModel = require("./userModel");
 
 // la sequelize yo config haru lag ani database connect gardey vaneko hae 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -31,7 +33,8 @@ db.Sequelize = Sequelize; //db vanni object ma Sequelize vanni key ma Sequelize 
 db.sequelize = sequelize;
 
 // importing model files 
-db.blogs = require("./userModel")(sequelize, DataTypes);
+db.Users = userModel(sequelize, DataTypes);
+db.Blogs = blogModel(sequelize, DataTypes);
 
 //dB migration code here
 db.sequelize.sync({ force: false }).then(() => {
