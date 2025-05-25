@@ -15,6 +15,15 @@ app.set('view engine', 'ejs')
 app.post("/register", async (req, res) => {
     console.log(req.body)
     const { userName, userPassword, userEmail } = req.body
+
+    if (!userEmail || !userPassword || !userName) {
+        return (
+            res.json({
+                message: "please provide all the details."
+            })
+        )
+    }
+
     await Users.create({
         userName,
         userEmail,
@@ -27,6 +36,42 @@ app.post("/register", async (req, res) => {
 
 app.get("/login", (req, res) => {
     res.render("auth/login")
+})
+
+app.post("/login", async (req, res) => {
+    const { userEmail, userPassword } = req.body
+    if (!userEmail || !userPassword) {
+        return res.json({
+            message: "Please provide email and password!"
+        })
+    }
+
+    //email check
+
+    const [data] = await Users.findAll({
+        where: {
+            userEmail: userEmail
+        }
+    })
+
+    if (data) {
+        const isMatched = bcrypt.compareSync(userPassword, data.userPassword)
+
+        if (isMatched) {
+            
+            res.json({
+                message: "Login Successfull!"
+            })
+        } else {
+            res.json({
+                message: "Invalid password!"
+            })
+        }
+    } else {
+        res.json({
+            message: "Email is not registered!"
+        })
+    }
 })
 
 app.get("/register", (req, res) => {

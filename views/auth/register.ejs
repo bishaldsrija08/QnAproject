@@ -11,9 +11,9 @@
 <%- include("../components/navbar.ejs")   %>
 
 <form action="/register" method="post">
-    <input type="text" name="userName" placeholder="Username">
-    <input type="email" name="userEmail" placeholder="Email">
-    <input type="password" name="userPassword" placeholder="Password">
+    <input type="text" name="userName" placeholder="Username" required>
+    <input type="email" name="userEmail" placeholder="Email" required>
+    <input type="password" name="userPassword" placeholder="Password" required>
     <input type="submit" value="Register">
 </form>
 

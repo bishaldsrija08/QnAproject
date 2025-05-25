@@ -37,7 +37,7 @@ db.Users = userModel(sequelize, DataTypes);
 db.Blogs = blogModel(sequelize, DataTypes);
 
 //dB migration code here
-db.sequelize.sync({ force: false }).then(() => {
+db.sequelize.sync({ alter: false }).then(() => {
     console.log("yes re-sync done");
 });
 
