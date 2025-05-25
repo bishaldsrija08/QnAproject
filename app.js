@@ -3,6 +3,7 @@ const { Users } = require("./model/index.js")
 const app = express()
 require("./model/index.js")
 require("./config/dbConfig.js")
+const bcrypt = require("bcrypt")
 
 //formbata ako data buj vaneko
 app.use(express.urlencoded({ extended: true })) // adi frontend pani backend batai render vako xa vane yo use garne
@@ -17,7 +18,7 @@ app.post("/register", async (req, res) => {
     await Users.create({
         userName,
         userEmail,
-        userPassword
+        userPassword: bcrypt.hashSync(userPassword, 10)
     })
     res.json({
         message: "Registered Successfully"
