@@ -4,6 +4,7 @@ const app = express()
 require("./model/index.js")
 require("./config/dbConfig.js")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
 //formbata ako data buj vaneko
 app.use(express.urlencoded({ extended: true })) // adi frontend pani backend batai render vako xa vane yo use garne
@@ -55,13 +56,17 @@ app.post("/login", async (req, res) => {
     })
 
     if (data) {
-        const isMatched = bcrypt.compareSync(userPassword, data.userPassword)
+        const isMatched = bcrypt.compareSync(userPassword, data.userPassword) //compareSync returns boolean
 
         if (isMatched) {
-            
+        const token = jwt.sign({id:data.id}, "bishal", {
+                expiresIn: '30d'
+            })
+            res.cookie("jwtLoginToken", token)
             res.json({
                 message: "Login Successfull!"
             })
+
         } else {
             res.json({
                 message: "Invalid password!"
@@ -78,6 +83,7 @@ app.get("/register", (req, res) => {
     res.render("auth/register")
 })
 
+//nodelai vaneko ki public vitra ko css folder lai access gar vanarw natra nodele file access gardena atikai
 app.use(express.static('public/css/'))
 
 
