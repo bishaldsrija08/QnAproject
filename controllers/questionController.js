@@ -7,7 +7,7 @@ exports.renderAskQuestionPage = async (req, res) => {
 exports.askQuestion = async (req, res) => {
     try {
         const { quesTitle, quesDescription } = req.body;
-        const uId = req.userId;
+        const {userId} = req;
         const fileName = req.file?.filename; // Optional chaining to avoid error if file not uploaded
 
         if (!quesTitle || !quesDescription) {
@@ -18,7 +18,7 @@ exports.askQuestion = async (req, res) => {
             quesTitle,
             quesDescription,
             quesImage: fileName || null, // Save null if no file
-            uId
+            userId
         });
 
         res.redirect("/");
