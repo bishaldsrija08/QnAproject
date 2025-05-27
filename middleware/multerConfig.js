@@ -1,16 +1,16 @@
-const multer = require("multer")
+const multer =require('multer')
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './storage')
-    },
-    filenme: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + "-" + file.originalname
-        cb(null, uniqueSuffix)
+    destination : function(req,file,cb){
+        cb(null, './storage') // cb(error, success ) , cb(error)
+    }, 
+    filename : function(req,file,cb){
+       cb(null, Date.now() + "-" + file.originalname)
     }
 })
 
+
 module.exports = {
-    multer,
-    storage
+    multer, 
+    storage 
 }

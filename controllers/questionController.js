@@ -5,21 +5,28 @@ exports.renderAskQuestionPage = async (req, res) => {
 }
 
 exports.askQuestion = async (req, res) => {
-    const { quesTitle, quesDescription } = req.body
-    const uId = req.userId
-    const fileName = req.file.filename
+    try {
+        const { quesTitle, quesDescription } = req.body;
+        const uId = req.userId;
+        const fileName = req.file?.filename; // Optional chaining to avoid error if file not uploaded
 
-    if (!quesTitle || !quesDescription) {
-        return res.send("Please provide Titlel and Description!")
+        if (!quesTitle || !quesDescription) {
+            return res.send("Please provide Title and Description!");
+        }
+
+        await Questions.create({
+            quesTitle,
+            quesDescription,
+            quesImage: fileName || null, // Save null if no file
+            uId
+        });
+
+        res.redirect("/");
+    } catch (err) {
+        console.error("Error in askQuestion:", err);
+        res.status(500).send("Something went wrong!");
     }
-    await Questions.create({
-        quesTitle,
-        quesDescription,
-        quesImage: fileName,
-        uId
-    })
-    res.redirect("/")
-}
+};
 
 
 exports.getAllQuestion = async (req, res) => {
