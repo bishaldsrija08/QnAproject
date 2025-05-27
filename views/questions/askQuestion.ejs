@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask Question </title>
+    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="navbar.css">
+</head>
+
+<body>
+
+    <!-- Importing navbar here -->
+    <%- include("../components/navbar.ejs") %>
+
+        <form action="/askquestion" method="post" enctype="multipart/form-data">
+            <input type="text" name="quesTitle" placeholder="Enter your question" required>
+            <input type="file" name="quesImage" required>
+            <textarea name="quesDescription" placeholder="Description" cols="35" rows="10"></textarea>
+
+            <input type="submit" value="Ask Question">
+        </form>
+
+</body>
+
+</html>
