@@ -7,7 +7,7 @@ exports.renderAskQuestionPage = async (req, res) => {
 exports.askQuestion = async (req, res) => {
     try {
         const { quesTitle, quesDescription } = req.body;
-        const {userId} = req;
+        const {userId} = req; //isAuthenticated bata forward vako id
         const fileName = req.file?.filename; // Optional chaining to avoid error if file not uploaded
 
         if (!quesTitle || !quesDescription) {
@@ -27,7 +27,6 @@ exports.askQuestion = async (req, res) => {
         res.status(500).send("Something went wrong!");
     }
 };
-
 
 exports.getAllQuestion = async (req, res) => {
     const data = await Questions.findAll({

@@ -1,12 +1,21 @@
-const { Users } = require("../model/index")
+const { Users, Questions } = require("../model/index")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
-exports.renderHomepage = async(req,res)=>{
-    res.render("home")
+exports.renderHomepage = async (req, res) => {
+    const data = await Questions.findAll({
+        include: [ //joining tables
+            {
+                model: Users,
+                attributes: ["userName"]
+            }
+        ]
+    }) // returns array
+    console.log(data)
+    res.render("home.ejs", { data })
 }
 
-exports.renderLoginPage= (req, res) => {
+exports.renderLoginPage = (req, res) => {
     res.render("auth/login")
 }
 
@@ -36,6 +45,7 @@ exports.userRegister = async (req, res) => {
     })
 }
 
+//Login
 exports.userLogin = async (req, res) => {
     const { userEmail, userPassword } = req.body
     if (!userEmail || !userPassword) {
@@ -45,7 +55,6 @@ exports.userLogin = async (req, res) => {
     }
 
     //email check
-
     const [data] = await Users.findAll({
         where: {
             userEmail: userEmail

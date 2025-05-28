@@ -1,15 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="login.css">
     <link rel="stylesheet" href="navbar.css">
-    <title>Home</title>
+    <title>Question Cards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .card h2 {
+            font-size: 1.2em;
+            margin: 0 0 10px;
+        }
+
+        .card p {
+            font-size: 0.9em;
+            color: #555;
+            margin: 0;
+        }
+        
+    </style>
 </head>
+
 <body>
-        <!-- Importing navbar here -->
-    <%- include("./components/navbar") %>
-<h1>This is Home page.</h1>
+    <!-- Importing navbar here -->
+    <%- include("./components/navbar.ejs") %>
+        <div class="card-container">
+            <% data.forEach((item)=>{ %>
+                <div class="card">
+                    <h2><%- item.quesTitle %></h2>
+                    <p>Author : <i><%- item.user.userName %></i></p>
+                </div>
+                <% }) %>
+        </div>
 </body>
+
 </html>

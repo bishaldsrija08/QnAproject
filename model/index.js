@@ -38,6 +38,7 @@ db.Users = userModel(sequelize, DataTypes);
 db.Questions = questionModel(sequelize, DataTypes);
 db.Answers = answerModel(sequelize, DataTypes)
 
+//Tabels relations
 db.Users.hasMany(db.Questions)
 db.Questions.belongsTo(db.Users)
 
