@@ -1,26 +1,50 @@
+// Import core modules
 const express = require("express")
-const app = express()
-require("./model/index.js")
-require("./config/dbConfig.js")
 const cookieParser = require("cookie-parser")
-const authroutes = require("./routes/authRoutes")
-const questionRoutes = require("./routes/questionsRoute")
+const { promisify } = require('util')
+const jwt = require("jsonwebtoken")
 
-//formbata ako data buj vaneko
-app.use(express.urlencoded({ extended: true })) // adi frontend pani backend batai render vako xa vane yo use garne
-app.use(express.json()) // client server ma yo use garne
-app.use(cookieParser())
+// Initialize app
+const app = express()
 
-//Set view engine - nodelai vaneko ejs buj
+// Load configurations and database
+require("./config/dbConfig.js")
+require("./model/index.js")
+
+// Set up middlewares
+app.use(express.urlencoded({ extended: true })) // Parse form data (for server-side rendered forms)
+app.use(express.json()) // Parse JSON data (for APIs)
+app.use(cookieParser()) // Parse cookies
+
+// Set view engine
 app.set('view engine', 'ejs')
 
-//auth route goes here
+// Serve static files (e.g., CSS)
+app.use(express.static('public/css/'))
+
+// Authentication middleware to check JWT in cookies - yo jati bela ni trigger hunxa
+app.use(async (req, res, next) => { 
+    const token = req.cookies.jwtLoginToken
+    try {
+        const decryptedData = await promisify(jwt.verify)(token, "bishal")
+        if (decryptedData) {
+            res.locals.isAuthenticated = true
+        } else {
+            res.locals.isAuthenticated = false
+        }
+    } catch (error) {
+        res.locals.isAuthenticated = false
+    }
+    next()
+})
+
+// Route handlers
+const authroutes = require("./routes/authRoutes")
+const questionRoutes = require("./routes/questionsRoute")
 app.use("/", authroutes)
 app.use("/", questionRoutes)
 
-//nodelai vaneko ki public vitra ko css folder lai access gar vanarw natra nodele file access gardena atikai
-app.use(express.static('public/css/'))
-
+// Start server
 app.listen(3000, () => {
     console.log("Project has started at port 3000")
 })

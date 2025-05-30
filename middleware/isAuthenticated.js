@@ -6,10 +6,10 @@ exports.isAuthenticated = async (req, res, next) => {
     if (!token || token === null || token === undefined) {
         return res.redirect('/login')
     }
-    //if token ayo vane
+    //if token ayo vane check gareko token sanga pw le
     const decryptedData = await promisify(jwt.verify)(token, "bishal")
 
-    //encrypted vayerw ako id xa ki nai check gareko
+    //encrypted vayerw ako id xa ki nai check gareko databasema
     const data = await Users.findByPk(decryptedData.id)
     if (!data) {
         return res.send("Invalid Token")

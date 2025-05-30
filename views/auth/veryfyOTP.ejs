@@ -15,12 +15,10 @@
     <!-- Importing navbar here -->
     <%- include("../components/navbar") %>
 
-        <form action="/login" method="post">
+        <form action="/verify-otp" method="post">
 
-            <input type="email" name="userEmail" placeholder="Email" required>
-            <input type="password" name="userPassword" placeholder="Password" required>
-            <a href="/forgot-password">Forgot Password?</a>
-            <input type="submit" value="Login">
+            <input type="number" name="userEmail" placeholder="OTP" required>
+            <input type="submit" value="Verify OTP">
         </form>
 
 </body>

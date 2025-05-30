@@ -1,4 +1,4 @@
-const { askQuestion, renderAskQuestionPage } = require("../controllers/questionController");
+const { askQuestion, renderAskQuestionPage, renderSingleQuestionPage } = require("../controllers/questionController");
 const { isAuthenticated } = require("../middleware/isAuthenticated");
 
 //Multer import
@@ -8,6 +8,8 @@ const upload = multer({storage:storage});
 const router = require("express").Router();
 
 router.route('/askquestion').get(isAuthenticated, renderAskQuestionPage).post(isAuthenticated, upload.single('quesImage'), askQuestion);
+
+router.route("/question/:id").get(renderSingleQuestionPage)
 
 
 module.exports = router;

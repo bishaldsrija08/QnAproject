@@ -1,6 +1,7 @@
 const { Users, Questions } = require("../model/index")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const sendEmail = require("../utils/sendEmail")
 
 exports.renderHomepage = async (req, res) => {
     const data = await Questions.findAll({
@@ -11,7 +12,6 @@ exports.renderHomepage = async (req, res) => {
             }
         ]
     }) // returns array
-    console.log(data)
     res.render("home.ejs", { data })
 }
 
@@ -24,7 +24,6 @@ exports.renderRegisterPage = (req, res) => {
 }
 
 exports.userRegister = async (req, res) => {
-    console.log(req.body)
     const { userName, userPassword, userEmail } = req.body
 
     if (!userEmail || !userPassword || !userName) {
@@ -40,9 +39,7 @@ exports.userRegister = async (req, res) => {
         userEmail,
         userPassword: bcrypt.hashSync(userPassword, 10)
     })
-    res.json({
-        message: "Registered Successfully"
-    })
+    res.redirect('/login')
 }
 
 //Login
@@ -69,9 +66,7 @@ exports.userLogin = async (req, res) => {
                 expiresIn: '30d'
             })
             res.cookie("jwtLoginToken", token)
-            res.json({
-                message: "Login Successfull!"
-            })
+            res.redirect('/')
 
         } else {
             res.json({
@@ -84,4 +79,42 @@ exports.userLogin = async (req, res) => {
             message: "Email is not registered!"
         })
     }
+}
+
+
+exports.renderForgotPasswordPage = (req, res) => {
+    res.render("auth/forgotPw")
+}
+
+exports.handleForgotPassword = async (req, res) => {
+    const { userEmail } = req.body
+    const data = await Users.findAll({
+        where: {
+            userEmail
+        }
+    })
+    if (data.length === 0) return res.redirect("/register")
+    const otp = Math.floor(Math.random() * 10000, 9999)
+
+    //otp  sending code  goes  here
+    await sendEmail({
+        email: userEmail,
+        subject: "Your OTP is here!",
+        text: `Dear User,
+
+Your one time password (OTP) is ${otp}. This code is valid for the next 10 minutes. Please do not share it with anyone.
+
+Best regards,
+Bishal Rijal
+`
+    })
+
+    //it save otp to database
+    data[0].otp = otp
+    await data[0].save()
+    res.redirect("/otp-check")
+}
+
+exports.renderVerifyOTP = (req, res) => {
+    res.render("auth/veryfyOTP")
 }
