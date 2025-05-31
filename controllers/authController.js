@@ -111,10 +111,41 @@ Bishal Rijal
 
     //it save otp to database
     data[0].otp = otp
+    data[0].otpGeneratedTime = Date.now()
     await data[0].save()
-    res.redirect("/otp-check")
+    res.redirect("/otp-check?userEmail=" + userEmail)
 }
 
 exports.renderVerifyOTP = (req, res) => {
-    res.render("auth/veryfyOTP")
+    const userEmail = req.query.userEmail
+    res.render("auth/veryfyOTP", {userEmail: userEmail})
+}
+
+exports.veryfyOtp =async(req, res) => {
+    const { otp } = req.body
+    const userEmail = req.params.id
+    const data = await Users.findAll({
+        where: {
+            otp: otp,
+            userEmail: userEmail
+        }
+    })
+    if (data.length === 0) {
+        return res.send("Invalid OTP")
+    }
+    const currentTime = Date.now()
+    const otpGeneratedTime = data[0].otpGeneratedTime
+    if (currentTime - otpGeneratedTime <= 12000) {
+        res.redirect(`/reset-password?userEmail=${userEmail}&otp=${otp}`)
+    } else {
+        res.send("OTP Expired!")
+    }
+}
+
+exports.renderResetPassword = async(req,res)=>{
+    const{userEmail, otp}=req.query
+    if(!userEmail || !otp){
+        return res.send("Please provide all the details!")
+    }
+    res.render("./auth/resetPassword")
 }
