@@ -118,10 +118,10 @@ Bishal Rijal
 
 exports.renderVerifyOTP = (req, res) => {
     const userEmail = req.query.userEmail
-    res.render("auth/veryfyOTP", {userEmail: userEmail})
+    res.render("auth/veryfyOTP", { userEmail: userEmail })
 }
 
-exports.veryfyOtp =async(req, res) => {
+exports.veryfyOtp = async (req, res) => {
     const { otp } = req.body
     const userEmail = req.params.id
     const data = await Users.findAll({
@@ -135,17 +135,49 @@ exports.veryfyOtp =async(req, res) => {
     }
     const currentTime = Date.now()
     const otpGeneratedTime = data[0].otpGeneratedTime
-    if (currentTime - otpGeneratedTime <= 12000) {
+    if (currentTime - otpGeneratedTime <= 120000) {
         res.redirect(`/reset-password?userEmail=${userEmail}&otp=${otp}`)
     } else {
         res.send("OTP Expired!")
     }
 }
 
-exports.renderResetPassword = async(req,res)=>{
-    const{userEmail, otp}=req.query
-    if(!userEmail || !otp){
+exports.renderResetPassword = async (req, res) => {
+    const { userEmail, otp } = req.query
+    if (!userEmail || !otp) {
         return res.send("Please provide all the details!")
     }
-    res.render("./auth/resetPassword")
+    res.render("./auth/resetPassword", { userEmail, otp })
+}
+
+exports.handleResetPassword = async (req, res) => {
+    const { userEmail, otp } = req.params
+    const { newPassword, confirmPassword } = req.body
+    if (!userEmail || !otp || !newPassword || !confirmPassword) {
+        res.send("Please provide all the credentials!")
+    }
+
+    if (newPassword !== confirmPassword) {
+        return res.send("new and confirm password must match!")
+    }
+    const data = await Users.findAll({
+        where: {
+            userEmail,
+            otp
+        }
+    })
+    const currentTime = Date.now()
+    const otpGeneratedTime = data[0].otpGeneratedTime
+    if (currentTime - otpGeneratedTime <= 120000) {
+        await Users.update({
+            userPassword: bcrypt.hashSync(newPassword, 10)
+        }, {
+            where: {
+                userEmail: userEmail
+            }
+        })
+        res.redirect('/login')
+    } else {
+        res.send("OTP Expired!")
+    }
 }
