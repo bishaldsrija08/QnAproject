@@ -16,7 +16,8 @@
     <%- include("../components/navbar") %>
 
         <form action="/login" method="post">
-
+            <p style="color: red;"><%-error%></p>
+            <p style="color: red;"><%-success%></p>
             <input type="email" name="userEmail" placeholder="Email" required>
             <input type="password" name="userPassword" placeholder="Password" required>
             <a href="/forgot-password">Forgot Password?</a>

@@ -3,6 +3,8 @@ const express = require("express")
 const cookieParser = require("cookie-parser")
 const { promisify } = require('util')
 const jwt = require("jsonwebtoken")
+const session = require('express-session')
+const flash = require('connect-flash')
 
 // Initialize app
 const app = express()
@@ -15,6 +17,12 @@ require("./model/index.js")
 app.use(express.urlencoded({ extended: true })) // Parse form data (for server-side rendered forms)
 app.use(express.json()) // Parse JSON data (for APIs)
 app.use(cookieParser()) // Parse cookies
+app.use(session({
+    secret: "hello",
+    saveUninitialized: false,
+
+}))
+app.use(flash())
 
 // Set view engine
 app.set('view engine', 'ejs')
@@ -23,7 +31,7 @@ app.set('view engine', 'ejs')
 app.use(express.static('public/css/'))
 
 // Authentication middleware to check JWT in cookies - yo jati bela ni trigger hunxa
-app.use(async (req, res, next) => { 
+app.use(async (req, res, next) => {
     const token = req.cookies.jwtLoginToken
     try {
         const decryptedData = await promisify(jwt.verify)(token, "bishal")

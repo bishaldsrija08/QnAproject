@@ -13,8 +13,8 @@
 
     <!-- Importing navbar here -->
     <%- include("../components/navbar.ejs") %>
-
         <form action="/register" method="post">
+            <p style="color: red;"><%-error%></p>
             <input type="text" name="userName" placeholder="Username" required>
             <input type="email" name="userEmail" placeholder="Email" required>
             <input type="password" name="userPassword" placeholder="Password" required>

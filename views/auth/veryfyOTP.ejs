@@ -15,7 +15,7 @@
     <%- include("../components/navbar") %>
 
         <form action="/otp-check/<%-userEmail%>" method="post">
-
+            <p style="color: red;"><%-error%></p>
             <input type="number" name="otp" placeholder="otp" required>
             <input type="submit" value="Verify OTP">
         </form>

@@ -49,6 +49,7 @@
 <body>
     <!-- Importing navbar here -->
     <%- include("./components/navbar.ejs") %>
+    <p style="color: red;"><%-success%></p>
         <div class="card-container">
             <% data.forEach((item)=>{ %>
                 <div class="card" onClick="window.location.href='/question/<%-item.id%>'">
