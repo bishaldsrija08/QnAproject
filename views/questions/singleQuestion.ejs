@@ -37,10 +37,33 @@
 <body>
     <!-- Importing navbar here -->
     <%- include("../components/navbar.ejs") %>
-        <h1 id="title"><%-data[0].quesTitle%></h1>
-        <p>Author : <u><%-data[0].user.userName%></u></p>
-        <img id="image" src="https://scontent.fktm19-1.fna.fbcdn.net/v/t39.30808-6/500334847_697567146197115_4196386894346043771_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFKvr47m3vHlj0kEVYWdRLqpNn2xOLfccqk2fbE4t9xyuYkE9THCvDMvFPtpY1bW70tI6FFCqr-nh7EWv9xyhLs&_nc_ohc=zATq8YBkK-cQ7kNvwHxbgSJ&_nc_oc=Adm9K1eOw63rj-d3Wz80BAyWwP9YF6YZoqequKZky-ySDFA0wq-98lD4jP4-RZ_8b-I&_nc_zt=23&_nc_ht=scontent.fktm19-1.fna&_nc_gid=bm3EiT7zdcwiC1MlsAvbNg&oh=00_AfJXy6zueuCbQOr9dw5cImuykjn7yE_GTPTa7QD8rPGrcA&oe=683E1194" alt="Question Image">
-        <p id="description"><%-data[0].quesDescription%></p>
+        <div class="card">
+            <h1 id="title"><%-data[0].quesTitle%></h1>
+            <p>Author : <u><%-data[0].user.userName%></u></p>
+            <p><%-data[0].quesDescription%></p>
+            <img src="http://localhost:3000/<%-data[0].quesImage%>" alt="question image" height="50px" width="50px">
+            <br>
+            <i>Asked on: <%= new Date(data[0].createdAt).toLocaleDateString() %></i>
+        </div>
+
+        <div class="answers">
+            <h1>Answers here: </h1>
+            <% answers.forEach((answer)=>{%>
+                <div class="card" style="border: 1px solid red; margin: 4px; border-radius: 5px;">
+                    <p><%-answer.ansText%></p>
+                    <p>Author : <u><%-answer.user.userName%></u></p>
+                    <i>Answered on: <%= new Date(answer.createdAt).toLocaleDateString() %></i>
+                </div>
+                <% }) %>
+        </div>
+
+        <div class="answersecton">
+            <form action="/question/<%-data[0].id%>" method="post">
+                <textarea name="answer" id="" rows="20" cols="80"></textarea>
+                <button>Submit</button>
+            </form>
+        </div>
+
 </body>
 
 </html>

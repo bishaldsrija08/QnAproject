@@ -23,6 +23,8 @@ app.use(session({
 
 }))
 app.use(flash())
+//To view image
+app.use(express.static("./storage/"))
 
 // Set view engine
 app.set('view engine', 'ejs')
@@ -49,8 +51,10 @@ app.use(async (req, res, next) => {
 // Route handlers
 const authroutes = require("./routes/authRoutes")
 const questionRoutes = require("./routes/questionsRoute")
+const answerRoute = require("./routes/answerRoutes")
 app.use("/", authroutes)
 app.use("/", questionRoutes)
+app.use("/question", answerRoute)
 
 // Start server
 app.listen(3000, () => {
